@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-2mlhk!har9yu5cd%@3hqp)&+t&@f=7_t!&pjv-awbcyp50(#_%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -161,3 +162,5 @@ CKEDITOR_CONFIGS = {
         ],
     },
 }
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: viraj-blog-app
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn Blog_app.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: Blog_app.settings
+      - key: PYTHON_VERSION
+        value: 3.10
