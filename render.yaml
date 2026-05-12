@@ -7,5 +7,3 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: Blog_app.settings
-      - key: PYTHON_VERSION
-        value: 3.10
