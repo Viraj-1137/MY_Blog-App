@@ -1,0 +1,420 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-10">
+
+            <div class="editor-card shadow-lg rounded-4 overflow-hidden">
+
+                <div class="row g-0">
+
+                    <!-- LEFT SIDE -->
+
+                    <div class="col-lg-5 editor-side text-white">
+
+                        <div class="p-4 text-center">
+
+                            <!-- IMAGE PREVIEW -->
+
+                            {% if form.instance.image %}
+
+                                <img src="{{ form.instance.image.url }}"
+                                     id="preview-image"
+                                     class="preview-image shadow">
+
+                            {% else %}
+
+                                <div id="preview-placeholder"
+                                     class="default-preview">
+
+                                    <div>
+
+                                        <h3 class="fw-bold">
+
+                                            Your Cover Image
+
+                                        </h3>
+
+                                        <p class="opacity-75">
+
+                                            Add a compelling image
+                                            to make your post stand out.
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            {% endif %}
+
+                            <!-- TEXT -->
+
+                            <div class="mt-4">
+
+                                {% if form.instance.id %}
+
+                                    <h2 class="fw-bold">
+
+                                        Edit Your Post
+
+                                    </h2>
+
+                                    <p class="opacity-75">
+
+                                        Improve your content
+                                        before publishing changes.
+
+                                    </p>
+
+                                {% else %}
+
+                                    <h2 class="fw-bold">
+
+                                        Create New Post
+
+                                    </h2>
+
+                                    <p class="opacity-75">
+
+                                        Share your thoughts,
+                                        ideas, and stories.
+
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT SIDE -->
+
+                    <div class="col-lg-7 bg-white">
+
+                        <div class="p-5">
+
+                            <!-- DYNAMIC TITLE -->
+
+                            {% if form.instance.id %}
+
+                                <h2 class="fw-bold mb-4">
+
+                                    Update Post
+
+                                </h2>
+
+                            {% else %}
+
+                                <h2 class="fw-bold mb-4">
+
+                                    Create Post
+
+                                </h2>
+
+                            {% endif %}
+
+                            <!-- FORM -->
+
+                            <form method="POST"
+                                  enctype="multipart/form-data">
+
+                                {% csrf_token %}
+
+                                <!-- TITLE -->
+
+                                <div class="mb-4">
+
+                                    <label class="form-label
+                                                  fw-semibold
+                                                  fs-5">
+
+                                        Title
+
+                                    </label>
+
+                                    {{ form.title }}
+
+                                </div>
+
+                                <!-- CONTENT -->
+
+                                <div class="mb-4">
+
+                                    <label class="form-label
+                                                  fw-semibold
+                                                  fs-5">
+
+                                        Content
+
+                                    </label><br>
+
+                                    {{ form.content }}
+
+                                </div>
+
+                                <!-- IMAGE -->
+
+                                <div class="mb-4">
+
+                                    <label class="form-label
+                                                  fw-semibold
+                                                  fs-5">
+
+                                        Cover Image
+
+                                    </label>
+
+                                    {{ form.image }}
+
+                                </div>
+
+                                <!-- BUTTONS -->
+
+                                <div class="d-flex gap-3 flex-wrap">
+
+                                    <button type="submit"
+                                            class="btn btn-dark
+                                                   px-4
+                                                   py-2
+                                                   rounded-pill">
+
+                                        {% if form.instance.id %}
+
+                                            Save Changes
+
+                                        {% else %}
+
+                                            Publish Post
+
+                                        {% endif %}
+
+                                    </button>
+
+                                    <a href="/"
+                                       class="btn btn-outline-secondary
+                                              px-4
+                                              py-2
+                                              rounded-pill">
+
+                                        Cancel
+
+                                    </a>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CSS -->
+
+<style>
+
+.editor-card{
+
+    border:none;
+}
+
+.editor-side{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #334155
+    );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.preview-image{
+
+    width:100%;
+    height:320px;
+
+    object-fit:cover;
+
+    border-radius:20px;
+}
+
+.default-preview{
+
+    width:100%;
+    height:320px;
+
+    border-radius:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #1e293b,
+        #334155,
+        #475569
+    );
+
+    position:relative;
+}
+
+.default-preview::before{
+
+    content:'✍';
+
+    position:absolute;
+
+    font-size:70px;
+
+    opacity:0.08;
+}
+
+input[type="text"],
+textarea{
+
+    width:100%;
+
+    border-radius:18px !important;
+
+    border:1px solid #ddd !important;
+
+    padding:14px !important;
+
+    transition:0.3s ease;
+
+    background:#f8fafc !important;
+}
+
+textarea{
+
+    min-height:220px !important;
+
+    resize:none !important;
+
+    line-height:1.8 !important;
+}
+
+input[type="text"]:focus,
+textarea:focus{
+
+    border-color:#333 !important;
+
+    box-shadow:none !important;
+
+    background:white !important;
+}
+
+/* FILE INPUT */
+
+input[type="file"]{
+
+    width:100%;
+
+    padding:12px;
+
+    border:2px dashed #cbd5e1;
+
+    border-radius:16px;
+
+    background:#f8fafc;
+
+    cursor:pointer;
+
+    transition:0.3s ease;
+}
+
+input[type="file"]:hover{
+
+    background:#f1f5f9;
+}
+
+.btn{
+
+    transition:0.3s ease;
+}
+
+.btn:hover{
+
+    transform:translateY(-2px);
+}
+
+</style>
+
+<!-- IMAGE PREVIEW SCRIPT -->
+
+<script>
+
+const imageInput =
+    document.getElementById('id_image');
+
+if(imageInput){
+
+    imageInput.addEventListener('change', function(e){
+
+        const file = e.target.files[0];
+
+        if(file){
+
+            const imageURL =
+                URL.createObjectURL(file);
+
+            let previewImage =
+                document.getElementById('preview-image');
+
+            const placeholder =
+                document.getElementById('preview-placeholder');
+
+            // UPDATE EXISTING IMAGE
+
+            if(previewImage){
+
+                previewImage.src = imageURL;
+            }
+
+            // REPLACE PLACEHOLDER
+
+            else if(placeholder){
+
+                placeholder.innerHTML = `
+
+                    <img src="${imageURL}"
+                         id="preview-image"
+                         class="preview-image shadow">
+
+                `;
+            }
+
+        }
+
+    });
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+
+    <div class="auth-card shadow-lg">
+
+        <div class="row g-0 h-100">
+
+            <!-- LEFT SIDE -->
+
+            <div class="col-lg-6 auth-left d-none d-lg-flex">
+
+                <div class="auth-overlay">
+
+                    <div>
+
+                        <h1 class="display-4 fw-bold">
+
+                            Welcome Back
+
+                        </h1>
+
+                        <p class="lead mt-4">
+
+                            Continue sharing your stories,
+                            ideas, and experiences with the world.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE -->
+
+            <div class="col-lg-6 bg-white">
+
+                <div class="auth-form-container">
+
+                    <h2 class="fw-bold mb-2">
+
+                        Login
+
+                    </h2>
+
+                    <p class="text-muted mb-4">
+
+                        Sign in to continue
+
+                    </p>
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+                        {% if form.errors %}
+
+    <div class="alert alert-danger rounded-4 mb-4">
+
+        Invalid username or password.
+
+    </div>
+
+{% endif %}
+
+                        <!-- USERNAME -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+
+                                Username
+
+                            </label>
+
+                            <input type="text"
+                                   name="username"
+                                   class="form-control auth-input"
+                                   placeholder="Enter username">
+
+                        </div>
+
+                        <!-- PASSWORD -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+
+                                Password
+
+                            </label>
+
+                            <input type="password"
+                                   name="password"
+                                   class="form-control auth-input"
+                                   placeholder="Enter password">
+
+                        </div>
+
+                        <!-- BUTTON -->
+
+                        <button type="submit"
+                                class="btn auth-btn w-100">
+
+                            Login
+
+                        </button>
+
+                    </form>
+
+                    <!-- REGISTER -->
+
+                    <div class="text-center mt-4">
+
+                        <p class="text-muted">
+
+                            Don’t have an account?
+
+                            <a href="{% url 'register' %}"
+                               class="fw-semibold auth-link">
+
+                                Register
+
+                            </a>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CSS -->
+
+<style>
+
+.auth-wrapper{
+
+    min-height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #334155
+    );
+
+    padding:40px 20px;
+}
+
+.auth-card{
+
+    width:100%;
+    max-width:1100px;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    background:white;
+}
+
+.auth-left{
+
+    background:
+    url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=1200')
+    center/cover;
+
+    min-height:650px;
+
+    position:relative;
+}
+
+.auth-overlay{
+
+    width:100%;
+    height:100%;
+
+    background:
+    rgba(15,23,42,0.75);
+
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:50px;
+}
+
+.auth-form-container{
+
+    padding:70px 50px;
+}
+
+.auth-input{
+
+    height:55px;
+
+    border-radius:16px;
+
+    border:1px solid #ddd;
+
+    padding:12px 18px;
+}
+
+.auth-input:focus{
+
+    box-shadow:none;
+
+    border-color:#111827;
+}
+
+.auth-btn{
+
+    height:55px;
+
+    border-radius:16px;
+
+    background:#111827;
+
+    color:white;
+
+    font-weight:600;
+
+    transition:0.3s ease;
+}
+
+.auth-btn:hover{
+
+    transform:translateY(-2px);
+
+    background:#000;
+}
+
+.auth-link{
+
+    text-decoration:none;
+
+    color:#111827;
+}
+
+.auth-link:hover{
+
+    text-decoration:underline;
+}
+
+@media(max-width:768px){
+
+    .auth-form-container{
+
+        padding:50px 30px;
+    }
+}
+
+</style>
+
+{% endblock %}

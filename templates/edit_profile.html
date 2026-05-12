@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="edit-profile-card shadow-lg rounded-4 overflow-hidden">
+
+                <div class="row g-0">
+
+                    <!-- LEFT SIDE -->
+
+                    <div class="col-lg-4 profile-side text-white">
+
+                        <div class="text-center p-4">
+
+                            <!-- PROFILE IMAGE -->
+
+                            {% if request.user.profile.profile_image %}
+
+                                <img src="{{ request.user.profile.profile_image.url }}"
+                                     id="preview-image"
+                                     class="profile-image shadow">
+
+                            {% else %}
+
+                                <img src="https://via.placeholder.com/200"
+                                     id="preview-image"
+                                     class="profile-image shadow">
+
+                            {% endif %}
+
+                            <!-- USERNAME -->
+
+                            <h3 class="fw-bold mt-4">
+
+                                {{ request.user.username }}
+
+                            </h3>
+
+                            <!-- SHORT TEXT -->
+
+                            <p class="opacity-75">
+
+                                Personalize your profile
+                                and let people know more
+                                about you.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT SIDE -->
+
+                    <div class="col-lg-8 bg-white">
+
+                        <div class="p-5">
+
+                            <!-- TITLE -->
+
+                            <h2 class="fw-bold mb-4">
+
+                                Edit Profile
+
+                            </h2>
+
+                            <!-- FORM -->
+
+                            <form method="POST"
+                                  enctype="multipart/form-data">
+
+                                {% csrf_token %}
+
+                                <!-- BIO -->
+
+                                <div class="mb-4">
+
+    <label class="form-label
+                  fw-semibold
+                  fs-5
+                  mb-3">
+
+        Bio
+
+    </label>
+
+    {{ form.bio }}
+
+    <small class="text-muted">
+
+        Write a short introduction
+        about yourself.
+
+    </small>
+
+</div>
+
+                                <!-- PROFILE IMAGE -->
+
+                                <div class="mb-4">
+
+                                    <label class="form-label fw-semibold">
+
+                                        Profile Picture
+
+                                    </label>
+
+                                    {{ form.profile_image }}
+
+                                </div>
+
+                                <!-- BUTTONS -->
+
+                                <div class="d-flex gap-3 flex-wrap">
+
+                                    <button type="submit"
+                                            class="btn btn-dark
+                                                   px-4
+                                                   py-2
+                                                   rounded-pill">
+
+                                        Save Changes
+
+                                    </button>
+
+                                    <a href="{% url 'profile' request.user.username %}"
+                                       class="btn btn-outline-secondary
+                                              px-4
+                                              py-2
+                                              rounded-pill">
+
+                                        Cancel
+
+                                    </a>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CSS -->
+
+<style>
+
+.edit-profile-card{
+
+    border:none;
+}
+
+.profile-side{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #334155
+    );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.profile-image{
+
+    width:180px;
+    height:180px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:5px solid white;
+}
+
+textarea,
+input[type="file"]{
+
+    border-radius:15px !important;
+
+    padding:12px !important;
+
+    border:1px solid #ddd !important;
+}
+
+textarea:focus{
+
+    box-shadow:none !important;
+
+    border-color:#333 !important;
+}
+
+.btn{
+
+    transition:0.3s ease;
+}
+
+.btn:hover{
+
+    transform:translateY(-2px);
+}
+
+    .bio-input{
+
+    width:100% !important;
+
+    min-height:160px !important;
+
+    resize:none !important;
+
+    border-radius:18px !important;
+
+    padding:18px !important;
+
+    font-size:16px !important;
+
+    line-height:1.7 !important;
+
+    background:#f8fafc !important;
+
+    border:1px solid #ddd !important;
+
+    transition:0.3s ease;
+}
+
+.bio-input:focus{
+
+    background:white !important;
+
+    border-color:#333 !important;
+
+    box-shadow:none !important;
+}
+</style>
+
+<!-- IMAGE PREVIEW -->
+
+<script>
+
+const imageInput =
+    document.getElementById('id_profile_image');
+
+const previewImage =
+    document.getElementById('preview-image');
+
+if(imageInput){
+
+    imageInput.addEventListener('change', function(e){
+
+        const file = e.target.files[0];
+
+        if(file){
+
+            previewImage.src =
+                URL.createObjectURL(file);
+        }
+
+    });
+
+}
+
+</script>
+
+{% endblock %}

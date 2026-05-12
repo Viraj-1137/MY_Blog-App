@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- PROFILE HEADER -->
+
+<div class="profile-banner shadow-lg rounded-4 mb-5">
+
+    <div class="profile-overlay rounded-4">
+
+        <div class="container py-5">
+
+            <div class="row align-items-center">
+
+                <!-- PROFILE IMAGE -->
+
+                <div class="col-lg-3 text-center mb-4 mb-lg-0">
+
+                    <img src="{{ profile.profile_image.url }}"
+                         class="profile-image shadow">
+
+                </div>
+
+                <!-- PROFILE INFO -->
+
+                <div class="col-lg-9 text-white">
+
+                    <h1 class="display-5 fw-bold">
+
+                        {{ user_profile.username }}
+
+                    </h1>
+
+                    <p class="lead mt-3 mb-4">
+
+                        {% if profile.bio %}
+
+                            {{ profile.bio }}
+
+                        {% else %}
+
+                            Passionate writer sharing ideas with the world.
+
+                        {% endif %}
+
+                    </p>
+
+                    <!-- STATS -->
+
+                    <div class="d-flex flex-wrap gap-4">
+
+                        <div class="stat-box">
+
+                            <h3>{{ posts.count }}</h3>
+
+                            <small>Total Posts</small>
+
+                        </div>
+
+                        <div class="stat-box">
+
+                            <h3>
+                                {% for post in posts %}
+                                {% endfor %}
+
+                                {{ posts|length }}
+
+                            </h3>
+
+                            <small>Published</small>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BUTTON -->
+
+                    {% if request.user == user_profile %}
+
+                        <a href="{% url 'edit_profile' %}"
+                           class="btn btn-warning
+                                  btn-lg
+                                  rounded-pill
+                                  px-4
+                                  mt-4
+                                  fw-semibold">
+
+                            Edit Profile
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- POSTS SECTION -->
+
+<div class="d-flex
+            justify-content-between
+            align-items-center
+            mb-4
+            flex-wrap">
+
+    <h2 class="fw-bold">
+
+        Posts by {{ user_profile.username }}
+
+    </h2>
+
+</div>
+
+<!-- POSTS GRID -->
+
+<div class="row g-4">
+
+{% for post in posts %}
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card post-card
+                    border-0
+                    shadow-sm
+                    rounded-4
+                    overflow-hidden
+                    h-100">
+
+            <!-- IMAGE -->
+
+            {% if post.image %}
+
+                <img src="{{ post.image.url }}"
+                     class="card-img-top fixed-image">
+
+            {% else %}
+
+                <div class="default-image d-flex
+                            align-items-center
+                            justify-content-center">
+
+                    <div class="text-center text-white px-3">
+
+                        <h4 class="fw-bold">
+
+                            {{ post.title|truncatewords:4 }}
+
+                        </h4>
+
+                        <p class="small opacity-75">
+
+                            Keep writing. Keep inspiring.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+            <!-- BODY -->
+
+            <div class="card-body d-flex flex-column">
+
+                <h4 class="fw-bold">
+
+                    {{ post.title }}
+
+                </h4>
+
+                <p class="text-muted small mb-2">
+
+    {{ post.created_at|date:"M d, Y" }}
+
+</p>
+
+                <p class="text-muted">
+
+                    {{ post.content|safe|truncatewords_html:20 }}
+
+                </p>
+
+                <!-- FOOTER -->
+
+                <div class="mt-auto
+                            d-flex
+                            justify-content-between
+                            align-items-center">
+
+                    <a href="{% url 'post_detail' post.id %}"
+                       class="btn btn-dark rounded-pill px-4">
+
+                        Read More
+
+                    </a>
+
+                    <span class="text-muted small">
+
+                        ❤️ {{ post.total_likes }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% empty %}
+
+    <div class="text-center mt-5">
+
+        <h3>No posts yet</h3>
+
+        <p class="text-muted">
+
+            This user has not published anything yet.
+
+        </p>
+
+    </div>
+
+{% endfor %}
+
+</div>
+
+<!-- CUSTOM CSS -->
+
+<style>
+
+.profile-banner{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #334155
+    );
+
+    overflow:hidden;
+}
+
+.profile-overlay{
+
+    background:
+    rgba(0,0,0,0.25);
+}
+
+.profile-image{
+
+    width:180px;
+    height:180px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:5px solid white;
+}
+
+.stat-box{
+
+    background:rgba(255,255,255,0.12);
+
+    padding:15px 25px;
+
+    border-radius:15px;
+
+    backdrop-filter:blur(5px);
+}
+
+.fixed-image{
+
+    height:250px;
+
+    object-fit:cover;
+
+    transition:0.4s ease;
+}
+
+.default-image{
+
+    height:250px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #1e293b,
+        #334155,
+        #475569
+    );
+
+    position:relative;
+}
+
+.default-image::before{
+
+    content:'✍';
+
+    position:absolute;
+
+    top:15px;
+    right:20px;
+
+    font-size:40px;
+
+    opacity:0.15;
+}
+
+.post-card{
+
+    transition:0.3s ease;
+}
+
+.post-card:hover{
+
+    transform:translateY(-6px);
+}
+
+.post-card:hover .fixed-image{
+
+    transform:scale(1.05);
+}
+
+.card-title{
+
+    min-height:60px;
+}
+
+</style>
+
+{% endblock %}

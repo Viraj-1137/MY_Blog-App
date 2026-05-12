@@ -1,0 +1,460 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+
+<div class="hero-section rounded-4 shadow-lg mb-5">
+
+    <div class="overlay rounded-4">
+
+        <div class="container py-5 text-center text-white">
+
+            <h1 class="display-3 fw-bold mb-3">
+
+                Share Your Story With The World
+
+            </h1>
+
+            <p class="lead fs-4 mb-4">
+
+                “Every idea begins with a voice.
+                Write boldly, inspire deeply,
+                and leave your thoughts where the world can find them.”
+
+            </p>
+
+            <div class="d-flex
+                        justify-content-center
+                        gap-3
+                        flex-wrap">
+
+                {% if user.is_authenticated %}
+
+                    <a href="{% url 'create_post' %}"
+                       class="btn btn-warning btn-lg px-5 rounded-pill fw-semibold">
+
+                        Start Writing
+
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'register' %}"
+                       class="btn btn-warning btn-lg px-5 rounded-pill fw-semibold">
+
+                        Get Started
+
+                    </a>
+
+                    <a href="{% url 'login' %}"
+                       class="btn btn-outline-light btn-lg px-5 rounded-pill">
+
+                        Login
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- HERO CSS -->
+
+<style>
+
+.hero-section{
+
+    background-image:
+    url('https://images.unsplash.com/photo-1455390582262-044cdead277a');
+
+    background-size:cover;
+    background-position:center;
+
+    min-height:420px;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.overlay{
+
+    background:rgba(0,0,0,0.65);
+
+    min-height:420px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:30px;
+}
+
+.hero-section h1{
+
+    letter-spacing:1px;
+}
+
+.hero-section p{
+
+    max-width:850px;
+    margin:auto;
+
+    color:#f1f1f1;
+}
+
+.hero-section .btn{
+
+    transition:0.3s ease;
+}
+
+.hero-section .btn:hover{
+
+    transform:translateY(-3px);
+}
+
+</style>
+
+<!-- SEARCH BAR -->
+
+<div class="row justify-content-center mb-5">
+
+    <div class="col-md-8">
+
+        <form method="GET">
+
+            <div class="input-group shadow-sm">
+
+                <input type="text"
+                       name="q"
+                       value="{{ request.GET.q }}"
+                       class="form-control form-control-lg"
+
+                       placeholder="Search posts...">
+
+                <button class="btn btn-dark"
+                        type="submit">
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- POSTS GRID -->
+
+<div class="row g-4">
+
+{% for post in posts %}
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden post-card">
+
+            <!-- IMAGE -->
+
+            {% if post.image %}
+
+    <img src="{{ post.image.url }}"
+         class="card-img-top fixed-image">
+
+{% else %}
+
+    <div class="default-image d-flex
+                align-items-center
+                justify-content-center">
+
+        <div class="text-center text-white px-3">
+
+            <h3 class="fw-bold">
+
+                {{ post.title|truncatewords:4 }}
+
+            </h3>
+
+            <p class="small opacity-75">
+
+                Share ideas. Inspire people.
+
+            </p>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+            <!-- CARD BODY -->
+
+            <div class="card-body d-flex flex-column">
+
+                <!-- AUTHOR -->
+
+                <div class="mb-2">
+
+                    <small class="text-muted">
+
+    By
+
+    <a href="{% url 'profile' post.author.username %}"
+       class="text-decoration-none fw-semibold">
+
+        {{ post.author.username }}
+
+    </a>
+
+    •
+
+    {{ post.created_at|date:"M d, Y" }}
+
+</small>
+
+                </div>
+
+                <!-- TITLE -->
+
+                <h4 class="card-title fw-bold">
+
+                    {{ post.title }}
+
+                </h4>
+
+                <!-- CONTENT -->
+
+                <p class="card-text text-muted">
+
+                    {{ post.content|safe|truncatewords_html:20 }}
+
+                </p>
+
+                <!-- SPACER -->
+
+                <div class="mt-auto">
+
+                    <!-- FOOTER -->
+
+                    <div class="d-flex
+                                justify-content-between
+                                align-items-center
+                                mt-3">
+
+                        <a href="{% url 'post_detail' post.id %}"
+                           class="btn btn-dark rounded-pill px-4">
+
+                            Read More
+
+                        </a>
+
+                        <span class="text-muted small">
+
+                            ❤️ {{ post.total_likes }}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% empty %}
+
+    <div class="text-center mt-5">
+
+        {% if request.GET.q %}
+
+            <h3>
+
+                No posts found for
+                "{{ request.GET.q }}"
+
+            </h3>
+
+        {% else %}
+
+            <h3>No posts available</h3>
+
+        {% endif %}
+
+    </div>
+
+{% endfor %}
+
+</div>
+
+<!-- PAGINATION -->
+
+{% if posts.paginator.num_pages > 1 %}
+
+<div class="d-flex justify-content-center mt-5">
+
+    <nav>
+
+        <ul class="pagination pagination-lg">
+
+            <!-- PREVIOUS -->
+
+            {% if posts.has_previous %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+
+                       href="?q={{ request.GET.q }}&page={{ posts.previous_page_number }}">
+
+                        Previous
+
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+            <!-- NUMBERS -->
+
+            {% for num in posts.paginator.page_range %}
+
+                {% if posts.number == num %}
+
+                    <li class="page-item active">
+
+                        <span class="page-link">
+
+                            {{ num }}
+
+                        </span>
+
+                    </li>
+
+                {% else %}
+
+                    <li class="page-item">
+
+                        <a class="page-link"
+
+                           href="?q={{ request.GET.q }}&page={{ num }}">
+
+                            {{ num }}
+
+                        </a>
+
+                    </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+            <!-- NEXT -->
+
+            {% if posts.has_next %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+
+                       href="?q={{ request.GET.q }}&page={{ posts.next_page_number }}">
+
+                        Next
+
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+</div>
+
+{% endif %}
+
+<!-- CUSTOM CSS -->
+
+<style>
+
+.fixed-image{
+
+    height:250px;
+    object-fit:cover;
+}
+
+.post-card{
+
+    transition:0.3s ease;
+}
+
+.post-card:hover{
+
+    transform:translateY(-5px);
+}
+
+.card-title{
+
+    min-height:60px;
+}
+
+.card-text{
+
+    min-height:80px;
+}
+
+
+
+    .default-image{
+
+    height:250px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #1e293b,
+        #334155,
+        #475569
+    );
+
+    position:relative;
+}
+
+.default-image::before{
+
+    content:'✍';
+
+    position:absolute;
+
+    top:15px;
+    right:20px;
+
+    font-size:40px;
+
+    opacity:0.15;
+}
+
+.card-img-top{
+
+    transition:0.4s ease;
+}
+
+.post-card:hover .card-img-top{
+
+    transform:scale(1.05);
+}</style>
+
+{% endblock %}

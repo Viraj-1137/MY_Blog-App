@@ -1,0 +1,561 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- POST HERO -->
+
+<div class="post-hero shadow-lg rounded-4 overflow-hidden mb-5">
+
+    {% if post.image %}
+
+        <img src="{{ post.image.url }}"
+             class="hero-image">
+
+    {% else %}
+
+        <div class="hero-placeholder
+                    d-flex
+                    align-items-center
+                    justify-content-center">
+
+            <div class="text-center text-white">
+
+                <h1 class="display-4 fw-bold">
+
+                    {{ post.title }}
+
+                </h1>
+
+                <p class="lead">
+
+                    Share ideas. Inspire people.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+<!-- POST CONTENT -->
+
+<div class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9">
+
+            <!-- TITLE -->
+
+            <h1 class="display-5 fw-bold mb-4">
+
+                {{ post.title }}
+
+            </h1>
+
+            <!-- AUTHOR + ACTIONS -->
+
+            <div class="d-flex
+                        justify-content-between
+                        align-items-center
+                        flex-wrap
+                        mb-4">
+
+                <!-- AUTHOR -->
+
+                <div class="d-flex align-items-center">
+
+                <a href="{% url 'profile' post.author.username %}"  ><img src="{{ post.author.profile.profile_image.url }}"
+                                                                          class="author-image me-3"></a>
+
+                    <div>
+
+                        <div>
+
+                            <a href="{% url 'profile' post.author.username %}"
+                               class="fw-semibold text-decoration-none">
+
+                                {{ post.author.username }}
+
+                            </a>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            Published on {{ post.created_at|date:"F d, Y" }}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTIONS -->
+
+                <div class="d-flex gap-2 mt-3 mt-lg-0">
+
+<!--                    Save Post-->
+                    <button id="save-btn"
+        class="btn btn-outline-dark rounded-pill">
+
+    {% if user in post.saved_by.all %}
+
+        Saved
+
+    {% else %}
+
+        Save
+
+    {% endif %}
+
+</button>
+
+                    <!-- SHARE -->
+
+                    <button onclick="sharePost()"
+                            class="btn btn-outline-dark rounded-pill">
+
+                        Share
+
+                    </button>
+
+                    <!-- LIKE -->
+
+                    <button id="like-btn"
+                            class="btn btn-dark rounded-pill">
+
+                        {% if user in post.likes.all %}
+                            ❤️ Unlike
+                        {% else %}
+                            ❤️ Like
+                        {% endif %}
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- LIKE COUNT -->
+
+            <div class="mb-4">
+
+                <span class="badge bg-dark fs-6 px-3 py-2">
+
+                    ❤️
+                    <span id="like-count">
+
+                        {{ post.total_likes }}
+
+                    </span>
+
+                    Likes
+
+                </span>
+
+            </div>
+
+            <!-- CONTENT -->
+
+            <div class="post-content mb-5">
+
+                {{ post.content|safe }}
+
+            </div>
+
+            <!-- EDIT / DELETE -->
+
+            {% if request.user == post.author %}
+
+                <div class="d-flex gap-3 mb-5">
+
+                    <a href="{% url 'update_post' post.id %}"
+                       class="btn btn-warning rounded-pill px-4">
+
+                        Edit Post
+
+                    </a>
+
+                    <a href="{% url 'delete_post' post.id %}"
+                       class="btn btn-danger rounded-pill px-4"
+
+                       onclick="return confirm('Delete this post?')">
+
+                        Delete
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+            <!-- COMMENTS -->
+
+            <div class="comments-box shadow-sm rounded-4 p-4">
+
+                <h3 class="fw-bold mb-4">
+
+                    Comments
+
+                </h3>
+
+                <!-- COMMENTS LIST -->
+
+                <div id="comments-section">
+
+                    {% for comment in comments %}
+
+                        <div class="comment-card mb-4">
+
+                            <div class="d-flex">
+
+                                <!-- PROFILE -->
+
+                           <a href="/profile/{{comment.user.username}}/"><img src="{{ comment.user.profile.profile_image.url }}"
+                                     class="comment-image me-3"></a>
+
+                                <!-- COMMENT BODY -->
+
+                                <div class="comment-body w-100">
+
+                                    <div class="d-flex
+                                                justify-content-between
+                                                align-items-center">
+
+                                        <strong>
+
+                                            <a href="/profile/{{comment.user.username}}/" id="com">{{ comment.user.username }}</a>
+
+                                        </strong>
+
+                                    </div>
+
+                                    <p class="mb-0 mt-2">
+
+                                        {{ comment.text }}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% empty %}
+
+                        <p class="text-muted">
+
+                            No comments yet.
+                            Start the conversation.
+
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- COMMENT FORM -->
+
+                {% if user.is_authenticated %}
+
+                <form id="comment-form" class="mt-4">
+
+                    {% csrf_token %}
+
+                    <textarea name="text"
+                              id="comment-input"
+
+                              class="form-control rounded-4 p-3 mb-3"
+
+                              rows="4"
+
+                              placeholder="Write something thoughtful..."></textarea>
+
+                    <button type="submit"
+                            class="btn btn-dark rounded-pill px-4">
+
+                        Add Comment
+
+                    </button>
+
+                </form>
+
+                {% else %}
+
+                    <p class="mt-4">
+
+                        <a href="{% url 'login' %}">
+                            Login
+                        </a>
+
+                        to comment.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+function sharePost(){
+
+    navigator.clipboard.writeText(window.location.href);
+
+    alert("Post link copied to clipboard!");
+}
+
+const likeBtn =
+    document.getElementById('like-btn');
+
+if(likeBtn){
+
+    likeBtn.addEventListener('click', function(){
+
+        fetch("{% url 'like_post' post.id %}")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            document.getElementById('like-count')
+            .innerText = data.total_likes;
+
+            if(data.liked){
+
+                likeBtn.innerHTML =
+                '❤️ Unlike';
+
+            }
+
+            else{
+
+                likeBtn.innerHTML =
+                '❤️ Like';
+
+            }
+
+        });
+
+    });
+
+}
+
+const saveBtn =
+    document.getElementById('save-btn');
+
+if(saveBtn){
+
+    saveBtn.addEventListener('click', function(){
+
+        fetch("{% url 'save_post' post.id %}")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            if(data.saved){
+
+                saveBtn.innerHTML = 'Saved';
+
+            }
+
+            else{
+
+                saveBtn.innerHTML = 'Save';
+
+            }
+
+        });
+
+    });
+
+}
+
+
+
+const commentForm =
+    document.getElementById('comment-form');
+
+if(commentForm){
+
+    commentForm.addEventListener('submit', function(e){
+
+        e.preventDefault();
+
+        const commentInput =
+            document.getElementById('comment-input');
+
+        fetch("{% url 'add_comment' post.id %}", {
+
+            method:'POST',
+
+            headers:{
+                'X-CSRFToken':'{{ csrf_token }}'
+            },
+
+            body:new URLSearchParams({
+                'text':commentInput.value
+            })
+
+        })
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            const commentsSection =
+                document.getElementById('comments-section');
+
+            commentsSection.innerHTML += `
+
+                <div class="comment-card mb-4">
+
+                    <div class="d-flex">
+
+                        <img src="{{ user.profile.profile_image.url }}"
+                             class="comment-image me-3">
+
+                        <div class="comment-body w-100">
+
+                            <strong>
+
+                                ${data.username}
+
+                            </strong>
+
+                            <p class="mb-0 mt-2">
+
+                                ${data.text}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            commentInput.value='';
+
+        });
+
+    });
+
+}
+
+</script>
+
+<!-- CSS -->
+
+<style>
+
+.hero-image{
+
+    width:100%;
+    height:450px;
+
+    object-fit:cover;
+}
+
+.hero-placeholder{
+
+    height:450px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #334155
+    );
+}
+
+.author-image{
+
+    width:55px;
+    height:55px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+}
+
+.post-content{
+
+    font-size:1.15rem;
+
+    line-height:2;
+
+    color:#333;
+}
+
+.comments-box{
+
+    background:#fff;
+}
+
+.comment-card{
+
+    background:#f8fafc;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    transition:0.3s ease;
+}
+
+.comment-card:hover{
+
+    transform:translateY(-3px);
+}
+
+.comment-image{
+
+    width:50px;
+    height:50px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+}
+
+.comment-body{
+
+    background:white;
+
+    padding:15px;
+
+    border-radius:15px;
+}
+
+textarea:focus{
+
+    box-shadow:none !important;
+
+    border-color:#333 !important;
+}
+
+    #com{
+            text-decoration: none;
+            color: blue; /* Optional: set link color */
+        }
+
+</style>
+
+{% endblock %}
