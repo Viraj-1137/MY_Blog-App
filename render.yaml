@@ -4,6 +4,3 @@ services:
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn Blog_app.wsgi:application"
-    envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: Blog_app.settings
