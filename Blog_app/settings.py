@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Blog',
     'ckeditor',
-    'ckeditor_uploader'
+    'ckeditor_uploader',
+    'cloudinary',
+     'cloudinary-storage'
 ]
 
 MIDDLEWARE = [
@@ -162,5 +164,15 @@ CKEDITOR_CONFIGS = {
         ],
     },
 }
+CLOUDINARY_STORAGE = {
+
+    'CLOUD_NAME': 'deolu4wdb',
+
+    'API_KEY': '766877788116812',
+
+    'API_SECRET': 'iplMaLCtr4eurZ4BZcsVHlKqPPc',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
