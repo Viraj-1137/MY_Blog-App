@@ -5,3 +5,4 @@ Pillow==11.3.0
 django-ckeditor==6.7.3
 cloudinary
 django-cloudinary-storage
+python-dotenv

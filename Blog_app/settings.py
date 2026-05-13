@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+
+load_dotenv()
 from django.conf.global_settings import STATICFILES_DIRS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -83,12 +86,15 @@ WSGI_APPLICATION = 'Blog_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+CLOUDINARY_STORAGE = {
+
+    'CLOUD_NAME': os.getenv('deolu4wdb'),
+
+    'API_KEY': os.getenv('766877788116812'),
+
+    'API_SECRET': os.getenv('iplMaLCtr4eurZ4BZcsVHlKqPPc'),
 }
+
 
 
 # Password validation
