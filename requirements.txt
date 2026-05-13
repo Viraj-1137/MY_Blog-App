@@ -6,3 +6,5 @@ django-ckeditor==6.7.3
 cloudinary
 django-cloudinary-storage
 python-dotenv
+psycopg2-binary
+dj-database-url
